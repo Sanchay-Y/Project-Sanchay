@@ -1,0 +1,82 @@
+--1 Database Setup
+CREATE DATABASE student_database;
+\c student_database
+
+CREATE TABLE student_table (
+    Student_id INT PRIMARY KEY,
+    Stu_name VARCHAR(100) NOT NULL,
+    Department VARCHAR(50),
+    email_id VARCHAR(50),
+    Phone_no VARCHAR(20),
+    Address VARCHAR(255),
+    Date_of_birth DATE,
+    Gender VARCHAR(10),
+    Major VARCHAR(50),
+    GPA VARCHAR(5),
+    Grade VARCHAR(2)
+);
+
+\dt
+
+\d student_table
+
+-- 2 Data Entry
+
+INSERT INTO student_table (Student_id, Stu_name, Department, email_id, Phone_no, Address, Date_of_birth, Gender, Major, GPA, Grade)
+VALUES
+  (1, 'Virat', 'Engineering', 'virat@example.com', '1234567890', '123 Main Street', '1988-11-05', 'Male', 'Computer Science', '3.75', 'A'),
+  (2, 'Rohit', 'Science', 'rohit@example.com', '9876543210', '456 Oak Avenue', '1987-04-30', 'Male', 'Physics', '3.6', 'B'),
+  (3, 'Hinata', 'Business', 'hinata@example.com', '5551234567', '789 Pine Lane', '1992-12-27', 'Female', 'Management', '3.9', 'A'),
+  (4, 'Mia', 'Arts', 'mia@example.com', '9998887777', '321 Cedar Road', '1992-04-06', 'Female', 'English Literature', '3.8', 'A'),
+  (5, 'Jasprit', 'Engineering', 'jasprit@example.com', '4445556666', '654 Birch Boulevard', '1993-12-06', 'Male', 'Mechanical Engineering', '3.5', 'B'),
+  (6, 'Hardik', 'Science', 'hardik@example.com', '1112223333', '789 Maple Street', '1993-10-11', 'Male', 'Chemistry', '3.7', 'B'),
+  (7, 'Sakura', 'Arts', 'sakura@example.com', '3334445555', '987 Elm Avenue', '1986-12-05', 'Female', 'History', '3.4', 'C'),
+  (8, 'Chahal', 'Engineering', 'chahal@example.com', '6667778888', '567 Pine Lane', '1993-12-06', 'Male', 'Electrical Engineering', '3.9', 'A'),
+  (9, 'Nami', 'Science', 'nami@example.com', '7778889999', '432 Cedar Road', '1986-09-17', 'Female', 'Biology', '3.6', 'B'),
+  (10, 'Asuka', 'Business', 'asuka@example.com', '1239874560', '876 Oak Avenue', '1990-09-14', 'Female', 'Finance', '3.8', 'A');
+
+-- 3 Student Information Retrival
+
+SELECT * 
+FROM student_table 
+ORDER BY Grade;
+
+-- 4 Query for Male Students
+
+SELECT * 
+FROM student_table
+WHERE Gender = 'Male';
+
+-- 5 GPA < 5.0
+SELECT * 
+FROM student_table
+WHERE CAST(GPA AS FLOAT) < 5.0;
+
+-- Update Student Email and Grade
+UPDATE student_table
+SET email_id = 'nami2@example.com', Grade = 'C'
+WHERE Student_id = 9;
+
+-- Query for students with grade B
+SELECT Stu_name, DATE_PART('YEAR', AGE(CURRENT_DATE, Date_of_birth)) AS Age
+FROM student_table
+WHERE
+Grade = 'B';
+
+-- Grouping and Calculation
+SELECT Department,Gender,ROUND(AVG(CAST (GPA AS NUMERIC)),2) as Avg_GPA
+FROM student_table
+GROUP BY Department,Gender;
+
+-- Table Renaming
+ALTER TABLE student_table RENAME TO student_info;
+
+-- Retrieve Student with highest GPA
+SELECT Stu_name,STUDENT_ID,GPA
+FROM student_info
+WHERE
+CAST(GPA AS NUMERIC) IN
+(
+    SELECT MAX(CAST(GPA AS NUMERIC))
+    FROM student_info
+);

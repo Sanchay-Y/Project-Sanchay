@@ -1,0 +1,134 @@
+-- 1 Database Creation
+CREATE DATABASE EventsManagement;
+
+CREATE TABLE events (
+    Event_id INT PRIMARY KEY,
+    event_name VARCHAR(255) NOT NULL,
+    event_date DATE,
+    event_location VARCHAR(255),
+    event_description TEXT
+);
+
+CREATE TABLE attendees (
+    attendee_id INT PRIMARY KEY,
+    attendee_name VARCHAR(255) NOT NULL,
+    attendee_phone VARCHAR(15),
+    attendee_email VARCHAR(255),
+    attendee_city VARCHAR(100)
+);
+
+CREATE TABLE registrations (
+    registration_id INT PRIMARY KEY,
+    event_id INT NOT NULL,
+    attendee_id INT NOT NULL,
+    registration_date DATE,
+    registration_amount DECIMAL(10, 2),
+    FOREIGN KEY (event_id) REFERENCES events (Event_id),
+    FOREIGN KEY (attendee_id) REFERENCES attendees (attendee_id)
+);
+
+-- 2 Data Creation
+INSERT INTO events (event_id, event_name, event_date, event_location, event_description)
+VALUES
+  (1, 'Tech Conference 2023', '2023-11-01', 'Convention Center', 'Annual technology conference for industry professionals.'),
+  (2, 'Art Exhibition Opening', '2023-11-10', 'Art Gallery', 'Showcasing the works of local and international artists.'),
+  (3, 'Community Charity Run', '2023-11-15', 'City Park', 'Fundraising event to support local charities.'),
+  (4, 'Business Networking Mixer', '2023-11-20', 'Downtown Hotel', 'Connect with professionals and expand your business network.'),
+  (5, 'Science Lecture Series', '2023-11-25', 'University Auditorium', 'Educational series featuring renowned scientists and researchers.');
+
+
+INSERT INTO attendees (attendee_id, attendee_name, attendee_phone, attendee_email, attendee_city)
+VALUES
+  (1, 'Virat Kohli', '1234567890', 'virat@example.com', 'Mumbai'),
+  (2, 'Rohit Sharma', '9876543210', 'rohit@example.com', 'Kanpur'),
+  (3, 'Shikhar Dhawan', '8765432109', 'shikhar@example.com', 'Delhi'),
+  (4, 'KL Rahul', '7654321098', 'kl@example.com', 'Bangalore'),
+  (5, 'Rishabh Pant', '6543210987', 'rishabh@example.com', 'Jaipur'),
+  (6, 'Deepika Padukone', '5432109876', 'deepika@example.com', 'Mumbai'),
+  (7, 'Akshay Kumar', '4321098765', 'akshay@example.com', 'Paris'),
+  (8, 'Amitabh Bachchan', '3210987654', 'amitabh@example.com', 'Jaipur'),
+  (9, 'Salman Khan', '2109876543', 'salman@example.com', 'Tokyo'),
+  (10, 'Shah Rukh Khan', '1098765432', 'shahrukh@example.com', 'Kanpur'),
+  (11, 'Sachin Tendulkar', '1098765431', 'sachin@example.com', 'Bangalore'),
+  (12, 'Ranbir Kapoor', '9876543210', 'ranbir@example.com', 'Paris'),
+  (13, 'Varun Dhawan', '8765432109', 'varun@example.com', 'Mumbai'),
+  (14, 'Hrithik Roshan', '7654321098', 'hrithik@example.com', 'Tokyo'),
+  (15, 'Samantha Akkineni', '6543210987', 'samantha@example.com', 'Hyderabad');
+
+
+INSERT INTO registrations (registration_id, event_id, attendee_id, registration_date, registration_amount)
+VALUES
+  (1, 1, 1, '2023-10-01', 100),
+  (2, 1, 2, '2023-10-02', 120),
+  (3, 2, 3, '2023-10-03', 80),
+  (4, 2, 4, '2023-10-04', 90),
+  (5, 3, 5, '2023-10-05', 75),
+  (6, 3, 6, '2023-10-06', 110),
+  (7, 4, 7, '2023-10-07', 130),
+  (8, 4, 8, '2023-10-08', 95),
+  (9, 5, 9, '2023-10-09', 85),
+  (10, 5, 10, '2023-10-10', 105),
+  (11, 1, 11, '2023-10-11', 100),
+  (12, 2, 12, '2023-10-12', 120),
+  (13, 3, 13, '2023-10-13', 80),
+  (14, 4, 14, '2023-10-14', 90),
+  (15, 5, 15, '2023-10-15', 75),
+  (16, 1, 1, '2023-10-16', 110),
+  (17, 2, 2, '2023-10-17', 130),
+  (18, 3, 3, '2023-10-18', 95),
+  (19, 4, 4, '2023-10-19', 85),
+  (20, 5, 5, '2023-10-20', 105),
+  (21, 1, 6, '2023-10-21', 100),
+  (22, 2, 7, '2023-10-22', 120),
+  (23, 3, 8, '2023-10-23', 80),
+  (24, 4, 9, '2023-10-24', 90),
+  (25, 5, 10, '2023-10-25', 75);
+
+-- 3 Manage Event Details
+-- a)
+INSERT INTO events (event_id, event_name, event_date, event_location, event_description)
+VALUES
+  (6, 'Music Festival', '2023-12-01', 'City Stadium', 'Annual music festival featuring top artists.');
+
+-- b)
+UPDATE events
+SET event_description = 'Annual music festival featuring top artists. Dont miss it!'
+WHERE event_id = 6;
+
+-- c)
+DELETE FROM events
+WHERE event_id = 6;
+
+-- 4 Manage Track Attendees & Handle Events
+-- a)
+INSERT INTO attendees (attendee_id, attendee_name, attendee_phone, attendee_email, attendee_city)
+VALUES
+  (16, 'MS Dhoni', '9876543210', 'msdhoni@example.com', 'Ranchi');
+
+--b)
+INSERT INTO registrations (registration_id, event_id, attendee_id, registration_date, registration_amount)
+VALUES
+  (26, 1, 16, '2023-11-05', 120);
+
+--5 Develop queries to retrieve event information,generate attendee lists, and calculate event attendance statistics
+
+-- Retrieve Event Information:
+SELECT *
+FROM events;
+
+-- Generate Attendee List for an Event:
+SELECT A.attendee_name, A.attendee_email
+FROM attendees A
+JOIN registrations R ON A.attendee_id = R.attendee_id
+WHERE R.event_id = 1;
+
+-- Calculate Event Attendance Statistics:
+SELECT
+  R.event_id,
+  E.event_name,
+  COUNT(DISTINCT R.attendee_id) AS total_attendees,
+  AVG(R.registration_amount) AS average_registration_amount
+FROM registrations R
+JOIN events E ON R.event_id = E.event_id
+GROUP BY R.event_id, E.event_name
+ORDER BY R.event_id;

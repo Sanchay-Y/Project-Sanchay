@@ -1,0 +1,121 @@
+-- 1) Database Creation
+
+CREATE DATABASE SalesDatabase;
+
+CREATE TABLE sales_sample (
+  Product_Id INTEGER,
+  Region VARCHAR(50),
+  Date DATE,
+  Sales_Amount NUMERIC
+);
+
+-- 2) Data Creation
+INSERT INTO sales_sample (Product_Id, Region, Date, Sales_Amount)
+VALUES
+  (1, 'North', '2023-11-01', 500),
+  (2, 'South', '2023-11-02', 700),
+  (3, 'East', '2023-11-03', 1000),
+  (4, 'West', '2023-11-04', 450),
+  (5, 'Central', '2023-11-05', 800),
+  (1, 'South', '2023-11-06', 600),
+  (2, 'East', '2023-11-07', 900),
+  (3, 'West', '2023-11-08', 350),
+  (4, 'Central', '2023-11-09', 750),
+  (5, 'North', '2023-11-10', 550);
+
+--3) Perform OLAP operations
+-- a) Drill Down
+SELECT
+  Region,
+  Product_Id,
+  SUM(Sales_Amount) AS TotalSales
+FROM
+  sales_sample
+GROUP BY
+  Region, Product_Id
+ORDER BY
+  Region, Product_Id;
+
+-- b) Rollup
+SELECT
+  COALESCE(Region, 'Total') AS Region,
+  SUM(Sales_Amount) AS TotalSales
+FROM
+  sales_sample
+GROUP BY
+  ROLLUP (Region)
+ORDER BY
+  Region IS NULL, Region;
+
+-- c) Cube
+SELECT
+  COALESCE(CAST(Product_Id AS VARCHAR), 'Total') AS Product,
+  SUM(Sales_Amount) AS TotalSales
+FROM
+  sales_sample
+GROUP BY
+  CUBE (Product_Id)
+ORDER BY
+  Product;
+
+SELECT
+  COALESCE(Region, 'Total') AS Region,
+  SUM(Sales_Amount) AS TotalSales
+FROM
+  sales_sample
+GROUP BY
+  CUBE (Region)
+ORDER BY
+  Region;
+
+SELECT
+  COALESCE(CAST(Date AS VARCHAR), 'Total') AS SalesDate,
+  SUM(Sales_Amount) AS TotalSales
+FROM
+  sales_sample
+GROUP BY
+  CUBE (Date)
+ORDER BY
+  SalesDate;
+
+-- d) Slice
+SELECT
+  Product_Id,
+  Date,
+  SUM(Sales_Amount) AS TotalSales
+FROM
+  sales_sample
+WHERE
+  Region = 'West'
+GROUP BY
+  Product_Id, Date
+ORDER BY
+  Product_Id, Date;
+
+SELECT
+  Product_Id,
+  Region,
+  SUM(Sales_Amount) AS TotalSales
+FROM
+  sales_sample
+WHERE
+  Date BETWEEN '2023-11-01' AND '2023-11-04'
+GROUP BY
+  Product_Id, Region
+ORDER BY
+  Product_Id, Region;
+
+-- e) dice
+SELECT
+  Product_Id,
+  Region,
+  Date,
+  SUM(Sales_Amount) AS TotalSales
+FROM
+  sales_sample
+WHERE
+  Product_Id = '2'
+  AND Region = 'East'
+  AND Date = '2023-11-07'
+GROUP BY
+  Product_Id, Region, Date;
